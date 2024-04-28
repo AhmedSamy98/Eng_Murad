@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restapi/TodoListApp.dart';
+import 'package:flutter_restapi/app/auth/login.dart';
+import 'package:flutter_restapi/app/auth/signup.dart';
+import 'package:flutter_restapi/app/auth/success.dart';
+import 'package:flutter_restapi/app/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+late SharedPreferences sharedPref;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  sharedPref = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -11,12 +18,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const TodoListApp(),
+      debugShowCheckedModeBanner: false,
+      title: 'restapi',
+      // theme: ThemeData(
+      //   primarySwatch: Colors.blue,
+      //   visualDensity: VisualDensity.adaptivePlatformDensity,
+      // ),
+      initialRoute:sharedPref.getString('id') == null ? 'LogIn' : 'Home',
+      routes:  <String, WidgetBuilder> {
+        'LogIn' : (context) => LogIn(),
+        'SignUp' : (context) => SignUp(),
+        'Success' : (context) => Success(),
+        'Home' : (context) => const Home(),
+      },
     );
   }
 }
